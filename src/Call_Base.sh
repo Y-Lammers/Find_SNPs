@@ -18,6 +18,6 @@ while read l; do
 		if [ -z "$variation" ]; then
 			variation="no coverage"
 		fi
-		echo $variation >> $output_directory$(echo ${bam%".bam"} | sed 's/.*\///g')"_snp_positions.txt"
+		echo "$variation" >> $output_directory$(echo ${bam%".bam"} | sed 's/.*\///g')"_snp_positions.txt"
 	done;
 done < $variation
