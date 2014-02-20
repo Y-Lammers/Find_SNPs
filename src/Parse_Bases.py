@@ -7,10 +7,10 @@ import sys, re, collections
 def process_line(line):
 
 	# get the most frequent base and mean quality score
-	if 'no coverage' in line: return [('N', 0)]	
 
 	# split line
 	line = line.strip().split('\t')
+	if 'no coverage' in line[0] or len(line) < 5: return [('N', 0)]	
 
 	# sanitize bases
 	line[4] = re.sub(r'[^ACTGactg,.]',"",line[4])
@@ -69,7 +69,7 @@ def parse_files():
 		if comparison == True:
 			cov1, cov2 = str(sum([i[1] for i in count1])), str(sum([i[1] for i in count2]))
 			line = line1.strip().split('\t')
-			Usuable.write('\t'.join([line[0], line[1], count1[0][0], count2[0][0], str(count1[0][1]), str(count2[0][1]), cov1, cov2, '\n']))
+			Usuable.write('\t'.join([line[0], line[1], count1[0][0], str(count1[0][1]), cov1, count2[0][0], str(count2[0][1]), cov2, '\n']))
 	
 	# close the output file
 	Usuable.close()
