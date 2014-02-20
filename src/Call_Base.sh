@@ -14,7 +14,7 @@ while read l; do
 		echo $scaf $pos;
 
 		# use mpileup to echo and write the exact coverage
-		variation=$(/usr/local/src/samtools-0.1.19/samtools mpileup -r $scaf":"$pos"-"$pos -f $reference_file $bam)
+		variation=$($(which samtools) mpileup -r $scaf":"$pos"-"$pos -f $reference_file $bam)
 		if [ -z "$variation" ]; then
 			variation="no coverage"
 		fi
