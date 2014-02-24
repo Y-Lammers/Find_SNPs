@@ -13,8 +13,9 @@ def process_line(line):
 	if 'no coverage' in line[0] or len(line) < 5: return [('N', 0)]	
 
 	# sanitize bases
-	line[4] = re.sub(r'[^ACTGactg,.]',"",line[4])
+	line[4] = re.sub(r'[^ACTGactg,.\*]',"",line[4])
 	line[4] = re.sub(r'[.,]', line[2],line[4]).upper()
+	if line[4] == '': return [('N'), 0]
 
 	# return nested list sorted on most common base
 	count = collections.Counter(line[4])
@@ -39,7 +40,8 @@ def compare_bases(count1, count2):
 	# compare the bases between two groups
 
 	# check that both groups have coverage
-	if count1[0][0] == 'N' or count2[0][0] == 'N': return False
+	if count1[0][0] in '*N' or count2[0][0] in '*N': return False
+	if count1[0][1] < 10 or count2[0][1] < 10: return False
 	
 	# check if both SNPs are homozygous
 	if homozygous(count1) <= 0.85 or homozygous(count2) <= 0.85: return False
