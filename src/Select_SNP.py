@@ -47,7 +47,7 @@ def parse_Region(Usuable_dic):
 	# parse the SNP region and check coverage and SNPs / InDels
 	
 	# set variables
-	seq, zyg, cov, location = '', 0, [], [sys.argv[2],sys.argv[3]]
+	seq, zyg, cov, location = '', 0, [], [sys.argv[3],sys.argv[4]]
 	
 	# parse file
 	for base in open(sys.argv[1]):
