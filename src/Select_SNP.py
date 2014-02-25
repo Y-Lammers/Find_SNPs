@@ -11,7 +11,7 @@ def read_Usuable():
 
 	Usuable_dic = {}
 	for SNP in open(sys.argv[2]):
-		SNP.strip().split('\t')
+		SNP = SNP.strip().split('\t')
 		Usuable_dic['-'.join(SNP[0:2])] = [SNP[2], SNP[5]]
 	
 	# return the dictionary
@@ -67,8 +67,8 @@ def parse_Region(Usuable_dic):
 	# check for coverage and zygosity, print the sequence
 	# if thresholds are met
 	if min(cov) >= 10 and zygosity <= 3:
-		sequence[75] = '[{0}/{1}]'.format(*tuple(Usuable_dic['-'.join(location)]))
-		print '\t'.join(location + [sequence, '\n'])
+		seq[75] = '[{0}/{1}]'.format(*tuple(Usuable_dic['-'.join(location)]))
+		print '\t'.join(location + [seq, '\n'])
 
 
 # run the script
