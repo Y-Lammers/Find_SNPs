@@ -23,6 +23,7 @@ def process_line(line):
 	# get the most frequent base and mean quality score
 
 	# split line
+	line = line.strip().split('\t')
 	if 'no coverage' in line[0] or len(line) < 5: return [('N', 0)]	
 
 	# sanitize bases

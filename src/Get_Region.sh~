@@ -31,7 +31,7 @@ while read l; do
 			variation="no coverage"
 		fi
 		echo "$variation" > $output_directory"temp.tsv"
-		${DIR}Select_SNP.py  $output_directory"temp.tsv" $Usuable $scaf $pos >> $SNPs
+		$(${DIR}Select_SNP.py  $output_directory"temp.tsv" $Usuable $scaf $pos >> $SNPs
 		
 	done;
 done < $Usuable
