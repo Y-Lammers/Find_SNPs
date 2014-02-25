@@ -27,9 +27,8 @@ while read l; do
 
 		# use mpileup to echo and write the exact coverage
 		variation=$($(which samtools) mpileup -r $scaf":"$pos1"-"$pos2 -f $reference_file $merged)
-		if [ -z "$variation" ]; then
-			variation="no coverage"
-		fi
+
+		# write the variation and get the sequence with the Select_SNP.py script
 		echo "$variation" > $output_directory"temp.tsv"
 		${DIR}Select_SNP.py  $output_directory"temp.tsv" $Usuable $scaf $pos >> $SNPs
 		

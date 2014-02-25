@@ -27,3 +27,7 @@ wait
 
 # Call the Parse_Bases python script to produce the viable SNP positions file
 ${DIR}Parse_Bases.py $bases1 $bases2 $SNP_output
+
+# Get flanking sequences for each SNP and filter remaining results based on coverage of 
+# the flanking regions and presence of other SNPs
+${DIR}Get_Regions.sh $reference $output_directory $bam1 $bam2

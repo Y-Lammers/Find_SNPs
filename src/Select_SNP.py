@@ -47,14 +47,14 @@ def parse_Region(Usuable_dic):
 	# parse the SNP region and check coverage and SNPs / InDels
 	
 	# set variables
-	seq, zyg, cov, location = '', 0, [], [sys.argv[3],sys.argv[4]]
+	seq, zyg, cov, location = [], 0, [], [sys.argv[3],sys.argv[4]]
 	
 	# parse file
 	for base in open(sys.argv[1]):
 		base = base.strip().split('\t')
 
 		# add reference base to sequence
-		seq += base[2]
+		seq.append(base[2])
 
 		# get nuc count and check coverage
 		count = process_line(base)
@@ -66,9 +66,9 @@ def parse_Region(Usuable_dic):
 
 	# check for coverage and zygosity, print the sequence
 	# if thresholds are met
-	if min(cov) >= 10 and zygosity <= 3:
+	if min(cov) >= 10 and zygosity <= 3 and len(seq) == 151:
 		seq[75] = '[{0}/{1}]'.format(*tuple(Usuable_dic['-'.join(location)]))
-		print '\t'.join(location + [seq, '\n'])
+		print '\t'.join(location + [''.join(seq)])
 
 
 # run the script
