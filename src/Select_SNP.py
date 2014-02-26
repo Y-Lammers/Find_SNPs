@@ -62,7 +62,7 @@ def parse_Region(Usuable_dic):
 		if int(base[3]) == 0: continue	
 
 		# check zygosity
-		if zygosity(count) <= 0.85: zyg += 1
+		if zygosity(count) <= 1-(10/float(base[3])): zyg += 1
 
 	# check for coverage and zygosity, print the sequence
 	# if thresholds are met
