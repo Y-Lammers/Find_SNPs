@@ -18,7 +18,7 @@ ${DIR}Call_SNP.sh $reference $output_directory $sample2 &
 wait
 
 # Remove duplicate SNP positions
-grep "^[^#]" $output_directory"variantion.vcf" | cut -f1-2 | sort --unique >> $output_directory"unique_variation.txt"
+grep "^[^#]" $output_directory"variation.vcf" | cut -f1-2 | sort --unique >> $output_directory"unique_variation.txt"
 
 # Obtain bases for each SNP position
 ${DIR}Call_Base.sh $reference $output_directory $sample1 &
@@ -30,4 +30,4 @@ ${DIR}Parse_Bases.py $bases1 $bases2 $SNP_output
 
 # Get flanking sequences for each SNP and filter remaining results based on coverage of 
 # the flanking regions and presence of other SNPs
-${DIR}Get_Regions.sh $reference $output_directory $bam1 $bam2
+${DIR}Get_Region.sh $reference $output_directory $bam1 $bam2
