@@ -48,21 +48,23 @@ def parse_Region(Usuable_dic):
 	
 	# set variables
 	seq, zyg, cov, location = [], 0, [], [sys.argv[3],sys.argv[4]]
+	ambigu = {'AC':'M','AG':'R','AT':'W','CG':'S','CT':'Y','GT':'K'}
 	
 	# parse file
 	for base in open(sys.argv[1]):
 		base = base.strip().split('\t')
-
-		# add reference base to sequence
-		seq.append(base[2])
 
 		# get nuc count and check coverage
 		count = process_line(base)
 		cov.append(int(base[3]))		
 		if int(base[3]) == 0: continue	
 
-		# check zygosity
-		if zygosity(count) <= 1-(10/float(base[3])): zyg += 1
+		# check zygosity and add reference base to sequence
+		if zygosity(count) <= 1-(10/float(base[3])):
+			zyg += 1
+			seq.append(ambigu[''.join(sorted([count[0][0],count[1][0]]))])
+		else:
+			seq.append(base[2])
 
 	# check for coverage and zygosity, print the sequence
 	# if thresholds are met
