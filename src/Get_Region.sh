@@ -31,6 +31,6 @@ while read l; do
 		# write the variation and get the sequence with the Select_SNP.py script
 		echo "$variation" > $output_directory"temp.tsv"
 		${DIR}Select_SNP.py  $output_directory"temp.tsv" $Usuable $scaf $pos >> $SNPs
-		
 	done;
 done < $Usuable
+rm $output_directory"temp.tsv"
