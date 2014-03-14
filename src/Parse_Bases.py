@@ -15,7 +15,7 @@ def process_line(line):
 	# sanitize bases
 	line[4] = re.sub(r'[^ACTGactg,.\*]',"",line[4])
 	line[4] = re.sub(r'[.,]', line[2],line[4]).upper()
-	if line[4] == '': return [('N'), 0]
+	if line[4] == '' or int(line[1]) < 76: return [('N'), 0]
 
 	# return nested list sorted on most common base
 	count = collections.Counter(line[4])
