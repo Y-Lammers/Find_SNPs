@@ -11,6 +11,9 @@ SNPs=$output_directory"SNP_file.csv"
 merged=$output_directory"merged.bam"
 DIR=$( cd "$( dirname "$0" )" && pwd )/
 
+# sleep to finish remmaining samtools processes
+sleep 5m
+
 # merge the two bam files
 $(which samtools) merge $merged $bam1 $bam2
 
@@ -30,7 +33,7 @@ while read l; do
 
 		# write the variation and get the sequence with the Select_SNP.py script
 		echo "$variation" > $output_directory"temp.tsv"
-		${DIR}Select_SNP.py  $output_directory"temp.tsv" $Usuable $scaf $pos >> $SNPs
+		${DIR}Select_SNP.py $output_directory"temp.tsv" $Usuable $scaf $pos >> $SNPs
 	done;
 done < $Usuable
 rm $output_directory"temp.tsv"
