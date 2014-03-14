@@ -11,9 +11,6 @@ SNPs=$output_directory"SNP_file.csv"
 merged=$output_directory"merged.bam"
 DIR=$( cd "$( dirname "$0" )" && pwd )/
 
-# sleep to finish remmaining samtools processes
-sleep 5m
-
 # merge the two bam files
 $(which samtools) merge $merged $bam1 $bam2
 

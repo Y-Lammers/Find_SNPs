@@ -30,4 +30,4 @@ ${DIR}Parse_Bases.py $bases1 $bases2 $SNP_output
 
 # Get flanking sequences for each SNP and filter remaining results based on coverage of 
 # the flanking regions and presence of other SNPs
-${DIR}Get_Region.sh $reference $output_directory $bam1 $bam2
+${DIR}Get_Region.sh $reference $output_directory $sample1 $sample2
