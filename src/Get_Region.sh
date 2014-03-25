@@ -6,9 +6,9 @@ reference_file=$1
 output_directory=$2
 bam1=$3
 bam2=$4
-Usuable=$output_directory"Usuable_SNPs.tsv"
 SNPs=$output_directory"SNP_file.csv"
 merged=$output_directory"merged.bam"
+Usuable=$output_directory"unique_variation.txt"
 DIR=$( cd "$( dirname "$0" )" && pwd )/
 
 # merge the two bam files
@@ -30,7 +30,7 @@ while read l; do
 
 		# write the variation and get the sequence with the Select_SNP.py script
 		echo "$variation" > $output_directory"temp.tsv"
-		${DIR}Select_SNP.py $output_directory"temp.tsv" $Usuable $scaf $pos >> $SNPs
+		${DIR}Get_SNP.py $output_directory"temp.tsv" $scaf $pos >> $SNPs
 	done;
 done < $Usuable
 rm $output_directory"temp.tsv"
