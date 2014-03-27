@@ -46,10 +46,10 @@ def parse_Region():
 		if int(base[3]) == 0: break	
 
 		# check zygosity and add reference base to sequence
-		if zygosity(count) <= 0.85:
+		if zygosity(count) <= 0.75:
 			zyg += 1
 			seq.append(ambigu[''.join(sorted([count[0][0],count[1][0]]))])
-		elif position == 75 and zygosity(count) > 0.85: break
+		elif position == 75 and zygosity(count) > 0.75: break
 		else:
 			seq.append(base[2])
 
