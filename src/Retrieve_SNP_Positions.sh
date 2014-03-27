@@ -7,8 +7,6 @@ reference=$1
 output_directory=${2%*/}/
 sample1=$3
 sample2=$4
-bases1=$output_directory$(echo ${sample1%".bam"} | sed 's/.*\///g')"_snp_positions.txt"
-bases2=$output_directory$(echo ${sample2%".bam"} | sed 's/.*\///g')"_snp_positions.txt"
 DIR=$( cd "$( dirname "$0" )" && pwd )/
 
 # Call SNPs for both samples
