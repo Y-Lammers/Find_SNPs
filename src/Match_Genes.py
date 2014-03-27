@@ -34,6 +34,8 @@ def parse_SNP(annon_dic):
 		SNP = SNP.strip().split('\t')
 
 		# check if SNP is located in an annotated region
+		if SNP[0] not in annon_dic: continue		
+
 		for annon in annon_dic[SNP[0]]:
 
 			# get the location in bases for the annotation
