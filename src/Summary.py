@@ -50,8 +50,8 @@ def print_summary():
 				hosts[i] == var.pop(0)
 		
 		if len(var) > 0:
-			print 'error '*3
+			#print 'error '*3
 			print line
-			print var
+			#print var
 
 print_summary()

@@ -49,7 +49,7 @@ def parse_Region():
 		if zygosity(count) <= 0.75:
 			zyg += 1
 			seq.append(ambigu[''.join(sorted([count[0][0],count[1][0]]))])
-		elif position == 75 and zygosity(count) > 0.75: break
+		elif position == 75 and (zygosity(count) > 0.75 or int(base[3]) < 20): break
 		else:
 			seq.append(base[2])
 
@@ -57,7 +57,7 @@ def parse_Region():
 
 	# check for coverage and zygosity, print the sequence
 	# if thresholds are met
-	if min(cov) >= 10 and zyg <= 3 and len(seq) == 151:
+	if min(cov) >= 15 and zyg <= 3 and len(seq) == 151:
 		SNP = (SNP for SNP,ambi in ambigu.items() if ambi==seq[75]).next()
 		seq[75] = '[{0}/{1}]'.format(SNP[0],SNP[1])
 		print '\t'.join(location + [''.join(seq)])
