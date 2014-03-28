@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 
-# Arguments: [temp_file] [scaffold] [pos]
+# Arguments: [temp_file] [scaffold] [pos] [vcf file 1] [vcf file 2]
 
 import sys, re, collections
 
@@ -21,6 +21,30 @@ def process_line(line):
 	return count.most_common()
 
 
+def read_vcf(vcf_list):
+
+	# parse throught both the csv_files and return a dictionary
+	# with the variable positions and and list with the coverage for the SNPs
+
+	# create the empty dictionaries, prefilted with eiter lists or dictionaries
+	snp_cov_dic, snp_var_dic = collections.defaultdic(list), collections.defaultdic(dict)
+
+	# open both vcf files and parse through each line
+	for file in vcf_list:
+		for line in open(file, 'r'):
+
+			# split the line and extract the SNP position
+			line = line.split('\t')
+			position = '-'.join(line[:2])
+
+			# fill both dictionaries with the vcf contents
+			snp_var_dic[position][line[4]] = file
+			snp_cov_dic[position].append(int(line[7].split('=')[1].split(';')[0]))
+	
+	# return the filled dictionaries
+	return [snp_cov_dic, snp_var_dic]
+
+
 def zygosity(count):
 
 	# calculate the ratio between the most abundant allele and minor alleles
@@ -35,6 +59,9 @@ def parse_Region():
 	# set variables
 	seq, zyg, cov, location, position = [], 0, [], [sys.argv[2],sys.argv[3]], 0
 	ambigu = {'AC':'M','AG':'R','AT':'W','CG':'S','CT':'Y','GT':'K'}
+
+	vcf_dic = {sys.argv[4]:0,sys.argv[5]:1}
+	snp_cov_dic, snp_var_dic = read_vcf([vcf for vcf in vcf_dic])
 	
 	# parse file
 	for base in open(sys.argv[1]):
@@ -46,12 +73,23 @@ def parse_Region():
 		if int(base[3]) == 0: break	
 
 		# check zygosity and add reference base to sequence
-		if zygosity(count) <= 0.75:
-			zyg += 1
-			seq.append(ambigu[''.join(sorted([count[0][0],count[1][0]]))])
-		elif position == 75 and (zygosity(count) > 0.75 or int(base[3]) < 20): break
+		if position == 75:
+			# if it is the SNP position check if the base is hetrozygous or break
+			if zygosity(count) > 0.75 or int(base[3]) < 20: break
+		
+			# substract the primary SNP coverage and check if the lesser variant is
+			# homozygous, else break
+			count[0][1] -= sorted(snp_cov_dic['-'.join(location)], reverse=True)[0]
+			if zygosity(count) > 0.25: break
+			else:
+				zyg += 1
+				seq.append(ambigu[''.join(sorted([count[0][0],count[1][0]]))])
 		else:
-			seq.append(base[2])
+			# check zygosity for non SNP bases
+			if zygosity(count) <= 0.75:
+				zyg += 1
+				seq.append(ambigu[''.join(sorted([count[0][0],count[1][0]]))])
+			else: seq.append(base[2])
 
 		position += 1
 
@@ -59,9 +97,20 @@ def parse_Region():
 	# if thresholds are met
 	if min(cov) >= 15 and zyg <= 3 and len(seq) == 151:
 		SNP = (SNP for SNP,ambi in ambigu.items() if ambi==seq[75]).next()
-		seq[75] = '[{0}/{1}]'.format(SNP[0],SNP[1])
-		print '\t'.join(location + [''.join(seq)])
 
+		# go through the detected alleles and check which allele belongs to which sample
+		var_per_sample, spare =  ['',''], ''
+		for i in SNP:
+			if i in snp_var_dic['-'.join(location)]:
+				var_per_sample[snp_var_dic['-'.join(location)][i]] = i
+			else: spare += i
+		# if there are spare alleles, fill the empty sample with that allele
+		if len(spare) == 1:
+			var_per_sample = [sample if var == '' else var for var in var_per_sample]
+
+		# reformat the allele and print the location, SNP string and variants to the commandline
+		seq[75] = '[{0}/{1}]'.format(SNP[0],SNP[1])
+		print '\t'.join(location + [''.join(seq)] + var_per_sample)
 
 # run the script
 parse_Region()

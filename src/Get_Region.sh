@@ -1,6 +1,6 @@
 #!/bin/bash
 
-# Script arguments: [reference] [output_directory] [bam1] [bam2]
+# Script arguments: [reference] [output_directory] [bam1] [bam2] [vcf1] [vcf2]
 # get variables
 reference_file=$1
 output_directory=$2
@@ -30,7 +30,7 @@ while read l; do
 
 		# write the variation and get the sequence with the Select_SNP.py script
 		echo "$variation" > $output_directory"temp.tsv"
-		${DIR}Get_SNP.py $output_directory"temp.tsv" $scaf $pos >> $SNPs
+		${DIR}Get_SNP.py $output_directory"temp.tsv" $scaf $pos $vcf1 $vcf2 >> $SNPs
 	done;
 done < $Usuable
 rm $output_directory"temp.tsv"

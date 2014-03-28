@@ -7,6 +7,8 @@ reference=$1
 output_directory=${2%*/}/
 sample1=$3
 sample2=$4
+vcf1=$output_directory$(echo ${sample1%.*} | sed 's/.*\///g')".vcf"
+vcf2=$output_directory$(echo ${sample2%.*} | sed 's/.*\///g')".vcf"
 DIR=$( cd "$( dirname "$0" )" && pwd )/
 
 # Call SNPs for both samples
@@ -19,4 +21,4 @@ grep "^[^#]" $output_directory"variation.vcf" | cut -f1-2 | sort --unique >> $ou
 
 # Get flanking sequences for each SNP and filter remaining results based on coverage of 
 # the flanking regions and presence of other SNPs
-${DIR}Get_Region.sh $reference $output_directory $sample1 $sample2
+${DIR}Get_Region.sh $reference $output_directory $sample1 $sample2 $vcf1 $vcf2
