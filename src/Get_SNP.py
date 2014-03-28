@@ -34,6 +34,7 @@ def read_vcf(vcf_list):
 		for line in open(file, 'r'):
 
 			# split the line and extract the SNP position
+			if line[0] == '#': continue
 			line = line.split('\t')
 			position = '-'.join(line[:2])
 
@@ -61,7 +62,6 @@ def parse_Region():
 	ambigu = {'AC':'M','AG':'R','AT':'W','CG':'S','CT':'Y','GT':'K'}
 
 	vcf_dic = {sys.argv[4]:0,sys.argv[5]:1}
-	snp_cov_dic, snp_var_dic = read_vcf([vcf for vcf in vcf_dic])
 	
 	# parse file
 	for base in open(sys.argv[1]):
@@ -75,10 +75,12 @@ def parse_Region():
 		# check zygosity and add reference base to sequence
 		if position == 75:
 			# if it is the SNP position check if the base is hetrozygous or break
-			if zygosity(count) > 0.75 or int(base[3]) < 20: break
+			if zygosity(count) > 0.85 or int(base[3]) < 20: break
 		
 			# substract the primary SNP coverage and check if the lesser variant is
 			# homozygous, else break
+			snp_cov_dic, snp_var_dic = read_vcf([vcf for vcf in vcf_dic])
+			count[0] = list(count[0])
 			count[0][1] -= sorted(snp_cov_dic['-'.join(location)], reverse=True)[0]
 			if zygosity(count) > 0.25: break
 			else:
@@ -86,7 +88,7 @@ def parse_Region():
 				seq.append(ambigu[''.join(sorted([count[0][0],count[1][0]]))])
 		else:
 			# check zygosity for non SNP bases
-			if zygosity(count) <= 0.75:
+			if zygosity(count) <= 0.85:
 				zyg += 1
 				seq.append(ambigu[''.join(sorted([count[0][0],count[1][0]]))])
 			else: seq.append(base[2])
@@ -102,11 +104,11 @@ def parse_Region():
 		var_per_sample, spare =  ['',''], ''
 		for i in SNP:
 			if i in snp_var_dic['-'.join(location)]:
-				var_per_sample[snp_var_dic['-'.join(location)][i]] = i
+				var_per_sample[vcf_dic[snp_var_dic['-'.join(location)][i]]] = i
 			else: spare += i
 		# if there are spare alleles, fill the empty sample with that allele
 		if len(spare) == 1:
-			var_per_sample = [sample if var == '' else var for var in var_per_sample]
+			var_per_sample = [spare if var == '' else var for var in var_per_sample]
 
 		# reformat the allele and print the location, SNP string and variants to the commandline
 		seq[75] = '[{0}/{1}]'.format(SNP[0],SNP[1])

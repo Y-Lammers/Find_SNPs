@@ -32,6 +32,7 @@ while read l; do
 
 		# write the variation and get the sequence with the Select_SNP.py script
 		echo "$variation" > $output_directory"temp.tsv"
+		echo -e "Contig\tPosition\tSequence\t"$vcf1"\t"$vcf2 > $SNPs
 		${DIR}Get_SNP.py $output_directory"temp.tsv" $scaf $pos $vcf1 $vcf2 >> $SNPs
 	done;
 done < $Usuable
