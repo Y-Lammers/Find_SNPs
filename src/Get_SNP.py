@@ -27,7 +27,7 @@ def read_vcf(vcf_list):
 	# with the variable positions and and list with the coverage for the SNPs
 
 	# create the empty dictionaries, prefilted with eiter lists or dictionaries
-	snp_cov_dic, snp_var_dic = collections.defaultdic(list), collections.defaultdic(dict)
+	snp_cov_dic, snp_var_dic = collections.defaultdict(list), collections.defaultdict(dict)
 
 	# open both vcf files and parse through each line
 	for file in vcf_list:
