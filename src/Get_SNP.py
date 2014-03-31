@@ -75,7 +75,7 @@ def parse_Region():
 		# check zygosity and add reference base to sequence
 		if position == 75:
 			# if it is the SNP position check if the base is hetrozygous or break
-			if zygosity(count) > 0.85 or sum([var[1] for var in count[1:]) < 10: break
+			if zygosity(count) > 0.85 or sum([var[1] for var in count[1:]]) < 10: break
 		
 			# substract the primary SNP coverage and check if the lesser variant is
 			# homozygous, else break
