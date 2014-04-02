@@ -35,7 +35,8 @@ def read_vcf(vcf_list):
 	#	for line in open(file, 'r'):
 		# split the line and extract the SNP position
 		#if line[0] == '#': continue
-		line = line.split('\t')
+		line = vcf.split('\t')
+		if len(line) != 10: continue
 		position = '-'.join(line[:2])
 
 		# fill both dictionaries with the vcf contents
@@ -86,12 +87,18 @@ def parse_Region():
 			if zygosity(count) > 0.25: break
 			else:
 				zyg += 1
-				seq.append(ambigu[''.join(sorted([count[0][0],count[1][0]]))])
+				try:
+					seq.append(ambigu[''.join(sorted([count[0][0],count[1][0]]))])
+				except:
+					return
 		else:
 			# check zygosity for non SNP bases
 			if zygosity(count) <= 0.85:
 				zyg += 1
-				seq.append(ambigu[''.join(sorted([count[0][0],count[1][0]]))])
+				try:
+					seq.append(ambigu[''.join(sorted([count[0][0],count[1][0]]))])
+				except:
+					return
 			else: seq.append(base[2])
 
 		position += 1
