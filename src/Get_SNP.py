@@ -30,18 +30,19 @@ def read_vcf(vcf_list):
 	snp_cov_dic, snp_var_dic = collections.defaultdict(list), collections.defaultdict(dict)
 
 	# open both vcf files and parse through each line
-	for file in vcf_list:
-		for line in open(file, 'r'):
+	count = 0
+	for vcf in vcf_list:
+	#	for line in open(file, 'r'):
+		# split the line and extract the SNP position
+		#if line[0] == '#': continue
+		line = line.split('\t')
+		position = '-'.join(line[:2])
 
-			# split the line and extract the SNP position
-			if line[0] == '#': continue
-			line = line.split('\t')
-			position = '-'.join(line[:2])
+		# fill both dictionaries with the vcf contents
+		snp_var_dic[position][line[4]] = count
+		snp_cov_dic[position].append(int(line[7].split('=')[1].split(';')[0]))
+		count += 1
 
-			# fill both dictionaries with the vcf contents
-			snp_var_dic[position][line[4]] = file
-			snp_cov_dic[position].append(int(line[7].split('=')[1].split(';')[0]))
-	
 	# return the filled dictionaries
 	return [snp_cov_dic, snp_var_dic]
 
@@ -61,7 +62,7 @@ def parse_Region():
 	seq, zyg, cov, location, position = [], 0, [], [sys.argv[2],sys.argv[3]], 0
 	ambigu = {'AC':'M','AG':'R','AT':'W','CG':'S','CT':'Y','GT':'K'}
 
-	vcf_dic = {sys.argv[4]:0,sys.argv[5]:1}
+	#vcf_dic = {sys.argv[4]:0,sys.argv[5]:1}
 	
 	# parse file
 	for base in open(sys.argv[1]):
@@ -104,7 +105,7 @@ def parse_Region():
 		var_per_sample, spare =  ['',''], ''
 		for i in SNP:
 			if i in snp_var_dic['-'.join(location)]:
-				var_per_sample[vcf_dic[snp_var_dic['-'.join(location)][i]]] = i
+				var_per_sample[snp_var_dic['-'.join(location)][i]] = i
 			else: spare += i
 		# if there are spare alleles, fill the empty sample with that allele
 		if len(spare) == 1:

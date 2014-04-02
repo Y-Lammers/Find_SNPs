@@ -33,9 +33,13 @@ while read l; do
 		# use mpileup to echo and write the exact coverage
 		variation=$($(which samtools) mpileup -r $scaf":"$pos1"-"$pos2 -f $reference_file $merged)
 
+		sub_vcf1=$(grep -P "$scaf\t$pos" $vcf1)
+		sub_vcf2=$(grep -P "$scaf\t$pos" $vcf2)
+
 		# write the variation and get the sequence with the Select_SNP.py script
 		echo "$variation" > $output_directory"temp.tsv"
-		${DIR}Get_SNP.py $output_directory"temp.tsv" $scaf $pos $vcf1 $vcf2 >> $SNPs
+		#${DIR}Get_SNP.py $output_directory"temp.tsv" $scaf $pos $vcf1 $vcf2 >> $SNPs
+		${DIR}Get_SNP.py $output_directory"temp.tsv" $scaf $pos $sub_vcf1 $sub_vcf2 >> $SNPs
 	done;
 done < $Usuable
 rm $output_directory"temp.tsv"
