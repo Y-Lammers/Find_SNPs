@@ -80,7 +80,7 @@ def parse_Region():
 		
 			# substract the primary SNP coverage and check if the lesser variant is
 			# homozygous, else break
-			snp_cov_dic, snp_var_dic = read_vcf([vcf for vcf in vcf_dic])
+			snp_cov_dic, snp_var_dic = read_vcf([sys.argv[4],sys.argv[5]])#[vcf for vcf in vcf_dic])
 			count[0] = list(count[0])
 			count[0][1] -= sorted(snp_cov_dic['-'.join(location)], reverse=True)[0]
 			if zygosity(count) > 0.25: break
