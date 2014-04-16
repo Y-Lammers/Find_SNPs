@@ -32,9 +32,7 @@ def read_vcf(vcf_list):
 	# open both vcf files and parse through each line
 	count = 0
 	for vcf in vcf_list:
-	#	for line in open(file, 'r'):
 		# split the line and extract the SNP position
-		#if line[0] == '#': continue
 		line = vcf.split('\t')
 		if len(line) != 10: continue
 		position = '-'.join(line[:2])
@@ -62,9 +60,8 @@ def parse_Region():
 	# set variables
 	seq, zyg, cov, location, position = [], 0, [], [sys.argv[2],sys.argv[3]], 0
 	ambigu = {'AC':'M','AG':'R','AT':'W','CG':'S','CT':'Y','GT':'K'}
+	reverse_ambigu = {'M':'(A/C)','R':'(A/G)','W':'(A/T)','S':'(C/G)','Y':'(C/T)','K':'(G/T)'}
 
-	#vcf_dic = {sys.argv[4]:0,sys.argv[5]:1}
-	
 	# parse file
 	for base in open(sys.argv[1]):
 		base = base.strip().split('\t')
@@ -75,13 +72,13 @@ def parse_Region():
 		if int(base[3]) == 0: break	
 
 		# check zygosity and add reference base to sequence
-		if position == 75:
+		if position == 100:
 			# if it is the SNP position check if the base is hetrozygous or break
 			if zygosity(count) > 0.85 or sum([var[1] for var in count[1:]]) < 10: break
 		
 			# substract the primary SNP coverage and check if the lesser variant is
 			# homozygous, else break
-			snp_cov_dic, snp_var_dic = read_vcf([sys.argv[4],sys.argv[5]])#[vcf for vcf in vcf_dic])
+			snp_cov_dic, snp_var_dic = read_vcf([sys.argv[4],sys.argv[5]])
 			count[0] = list(count[0])
 			count[0][1] -= sorted(snp_cov_dic['-'.join(location)], reverse=True)[0]
 			if zygosity(count) > 0.25: break
@@ -105,8 +102,8 @@ def parse_Region():
 
 	# check for coverage and zygosity, print the sequence
 	# if thresholds are met
-	if min(cov) >= 15 and zyg <= 3 and len(seq) == 151:
-		SNP = (SNP for SNP,ambi in ambigu.items() if ambi==seq[75]).next()
+	if min(cov) >= 15 and zyg <= 3 and len(seq) == 201:
+		SNP = (SNP for SNP,ambi in ambigu.items() if ambi==seq[100]).next()
 
 		# go through the detected alleles and check which allele belongs to which sample
 		var_per_sample, spare =  ['',''], ''
@@ -119,7 +116,11 @@ def parse_Region():
 			var_per_sample = [spare if var == '' else var for var in var_per_sample]
 
 		# reformat the allele and print the location, SNP string and variants to the commandline
-		seq[75] = '[{0}/{1}]'.format(SNP[0],SNP[1])
+		seq[100] = '[{0}/{1}]'.format(SNP[0],SNP[1])
+		count = 0
+		for nuc in seq:
+			if nuc in reverse_ambigu: seq[count] = reverse_ambigu[nuc]
+			count += 1
 		print '\t'.join(location + [''.join(seq)] + var_per_sample)
 
 # run the script

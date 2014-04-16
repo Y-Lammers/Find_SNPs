@@ -26,8 +26,8 @@ echo -e "#Contig\tPosition\tSequence\t"$vcf1"\t"$vcf2 > $SNPs
 while read l; do
 	# grab the SNP coordinates
 	echo $l | while read -r scaf pos stuff; do
-		pos1=$(($pos-75))
-		pos2=$(($pos+75))
+		pos1=$(($pos-100))
+		pos2=$(($pos+100))
 		echo $scaf $pos $pos1 $pos2;
 
 		# use mpileup to echo and write the exact coverage
@@ -38,7 +38,6 @@ while read l; do
 
 		# write the variation and get the sequence with the Select_SNP.py script
 		echo "$variation" > $output_directory"temp.tsv"
-		#${DIR}Get_SNP.py $output_directory"temp.tsv" $scaf $pos $vcf1 $vcf2 >> $SNPs
 		${DIR}Get_SNP.py $output_directory"temp.tsv" $scaf $pos "$sub_vcf1" "$sub_vcf2" >> $SNPs
 	done;
 done < $Usuable
